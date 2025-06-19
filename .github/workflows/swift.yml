@@ -45,3 +45,40 @@ jobs:
         name: swift test log (${{ matrix.os }})
         path: |
           swift-test_${{ matrix.os }}.log
+  swift-build-amazonlinux:
+    name: Swift Build & Test (amazonlinux2)
+    runs-on: ubuntu-latest
+    container:
+      image: swift:amazonlinux2
+      volumes:
+        - /node20217:/node20217:rw,rshared
+        - /node20217:/__e/node20:ro,rshared
+    steps:
+    - name: Show Swift version
+      run: swift --version
+    - name: Show Swift Package Manager version
+      run: swift package --version
+    - name: Prepare Node.js
+      run: |
+        curl -LO https://unofficial-builds.nodejs.org/download/release/v20.19.2/node-v20.19.2-linux-x64-glibc-217.tar.gz
+        tar -xf node-v20.19.2-linux-x64-glibc-217.tar.gz --strip-components 1 -C /node20217
+        ldd /__e/node20/bin/node
+    - uses: actions/checkout@v4
+    - name: Build
+      run: swift build -v | tee swift-build_amazonlinux2.log && exit ${PIPESTATUS[0]}
+    - name: Upload build log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: swift build log (amazonlinux2)
+        path: |
+          swift-build_amazonlinux2.log
+    - name: Run tests
+      run: swift test -v | tee swift-test_amazonlinux2.log && exit ${PIPESTATUS[0]}
+    - name: Upload test log
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: swift test log (amazonlinux2)
+        path: |
+          swift-test_amazonlinux2.log

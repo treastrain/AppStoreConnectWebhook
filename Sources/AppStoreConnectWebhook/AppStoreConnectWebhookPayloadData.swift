@@ -9,10 +9,14 @@ import Foundation
 
 public enum AppStoreConnectWebhookPayloadData: Sendable {
     case webhookPingCreated(WebhookPingCreated)
+    case appStoreVersionAppVersionStateUpdated(
+        AppStoreVersionAppVersionStateUpdated
+    )
 }
 
 enum AppStoreConnectWebhookPayloadDataType: String, Codable, Sendable {
     case webhookPingCreated
+    case appStoreVersionAppVersionStateUpdated
 }
 
 extension AppStoreConnectWebhookPayloadData: Codable {
@@ -40,6 +44,12 @@ extension AppStoreConnectWebhookPayloadData: Codable {
         case .webhookPingCreated:
             let webhookPingCreated = try WebhookPingCreated(from: decoder)
             self = .webhookPingCreated(webhookPingCreated)
+        case .appStoreVersionAppVersionStateUpdated:
+            let appStoreVersionAppVersionStateUpdated =
+                try AppStoreVersionAppVersionStateUpdated(from: decoder)
+            self = .appStoreVersionAppVersionStateUpdated(
+                appStoreVersionAppVersionStateUpdated
+            )
         }
     }
 
@@ -52,6 +62,15 @@ extension AppStoreConnectWebhookPayloadData: Codable {
                 forKey: .type
             )
             try webhookPingCreated.encode(to: encoder)
+        case .appStoreVersionAppVersionStateUpdated(
+            let appStoreVersionAppVersionStateUpdated
+        ):
+            try container.encode(
+                AppStoreConnectWebhookPayloadDataType
+                    .appStoreVersionAppVersionStateUpdated,
+                forKey: .type
+            )
+            try appStoreVersionAppVersionStateUpdated.encode(to: encoder)
         }
     }
 }

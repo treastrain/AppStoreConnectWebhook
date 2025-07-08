@@ -4,7 +4,14 @@ import PackageDescription
 
 let package = Package(
     name: "AppStoreConnectWebhook",
-    platforms: [.macOS(.v12)],
+    platforms: [
+        .iOS(.v15),
+        .macCatalyst(.v15),
+        .macOS(.v12),
+        .tvOS(.v15),
+        .visionOS(.v1),
+        .watchOS(.v8),
+    ],
     products: [
         .library(
             name: "AppStoreConnectWebhook",
